@@ -1,40 +1,13 @@
 <template>
 <body>
-	<h2>Dodaj film</h2>
+	<h2>Dodaj salę</h2>
     <div>
     <form @submit.prevent="handleSubmit">
-			<label>Nazwa filmu<br/></label>
+			<label>Liczba miejsc<br/></label>
 			<input
-				v-model="movie.name"
-				type="text"
-                maxlength="64"
-				:class="{ 'has-error': submitting && invalidText }" 
-				@focus="clearStatus"
-				@keypress="clearStatus"
-			/><br/>
-			<label>Czas trwania<br/></label>
-			<input
-				v-model="movie.duration"
+				v-model="auditorium.seats"
 				type="number"
-				:class="{ 'has-error': submitting && invalidDuration }" 
-				@focus="clearStatus"
-				@keypress="clearStatus"
-			/><br/>
-			<label>Opis<br/></label>
-			<input
-				v-model="movie.description"
-				type="text"
-                maxlength="255"
-				:class="{ 'has-error': submitting && invalidText }"
-				@focus="clearStatus"
-				@keypress="clearStatus"
-			/><br/>
-			<label>Zdjęcie<br/></label>
-			<input
-				v-model="movie.imageLink"
-				type="text"
-                maxlength="255"
-				:class="{ 'has-error': submitting && invalidText }"
+				:class="{ 'has-error': submitting && invalidNumber }" 
 				@focus="clearStatus"
 				@keypress="clearStatus"
 			/><br/>
@@ -46,7 +19,7 @@
 			<p v-if="success" class="success-message">
 				Dane poprawnie zapisano
 			</p>
-			<button>Dodaj film</button>
+			<button>Dodaj salę</button>
 		</form>
         </div>
 </body>
@@ -54,17 +27,14 @@
 
 <script>
 export default {
-		name: 'MovieForm',
+		name: 'AuditoriumForm',
 		data() {
 			return {
-				movie: {
+				auditorium: {
 					submitting: false,
 					error: false,
 					success: false,
-					name: '',
-					duration: '',
-					description: '',
-					imageLink: '',
+					seats: '',
 				}
 			}
 		},
@@ -79,20 +49,17 @@ export default {
 				}
 
 				const xhr = new XMLHttpRequest()
-				xhr.open("POST", "http://localhost:8080/movies", false)
+				xhr.open("POST", "http://localhost:8080/auditoriums", false)
 				xhr.setRequestHeader('Content-type', 'application/JSON')
-				xhr.send(JSON.stringify(this.movie))
-				console.log(JSON.stringify(this.movie))
-				this.$emit('add:movie')
+				xhr.send(JSON.stringify(this.auditorium))
+				console.log(JSON.stringify(this.auditorium))
+				this.$emit('add:auditorium')
 				console.log(xhr.status)
 
 				
 				//clear form fields
-				this.movie = {
-					name: '',
-					duration: '',
-					description: '',
-					imageLink: '',
+				this.auditorium = {
+					seats: '',
 				}
 
 				
@@ -106,11 +73,8 @@ export default {
 			},
 		},
 		computed: {
-			invalidText() {
-				return this.movie.name === '' || this.movie.description === ''
-			},
-			invalidDuration() {
-				return this.movie.duration <= -1 || this.movie.duration === ''
+			invalidNumber() {
+				return this.auditorium.seats <= -1 || this.auditorium.seats === ''
 			},
 		},
 	}

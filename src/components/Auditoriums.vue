@@ -2,19 +2,15 @@
 
     
     <body>
-        <!-- Tu bedzie jeszcze logo i menu -->
-        <h2>Filmy</h2>
+        <h2>Sale</h2>
 
 
-        <div v-for="movie in moviesSource" v-bind:key="movie.id">
-        <h5>{{ movie.name }}</h5>
-        <i>Czas trwania: {{ movie.duration }} min</i><br/>
-        {{ movie.description }}
-        <!-- <img alt="movie.name" src="movie.imageLink"> -->
+        <div v-for="auditorium in auditoriumsSource" v-bind:key="auditorium.id">
+        Nr sali: {{ auditorium.id }}<br/>
+        Liczba miejsc: {{ auditorium.seats }}
         <br/><br/>
-        <router-link v-if="!$auth.isAuthenticated" :to="{ name: 'Choose Ticket', params: { id: movie.id }}">Kup Bilet</router-link>
-        <router-link v-if="$auth.isAuthenticated" :to="{ name: 'Movie Update', params: { id: movie.id }}">Edytuj film</router-link><br/>
-        <button v-if="$auth.isAuthenticated" @click="deleteMovie(movie.id)">Usuń</button>
+        <router-link v-if="$auth.isAuthenticated" :to="{ name: 'Auditorium Update', params: { id: auditorium.id }}">Edytuj</router-link><br/>
+        <button v-if="$auth.isAuthenticated" @click="deleteAuditorium(auditorium.id)">Usuń</button>
 
         </div>
     
@@ -25,9 +21,9 @@
 
 
  export default {
-     name: 'movies-table',
+     name: 'auditoriums-table',
      props: {
-        moviesSource: Array,
+        auditoriumsSource: Array,
     },
 
     
@@ -35,7 +31,7 @@
     methods: {
        
         
-        deleteMovie(id) {
+        deleteAuditorium(id) {
             // const xhr = new XMLHttpRequest()
             // const url = "http://localhost:8080/movies/" + id
             // xhr.open("DELETE", url, false)
@@ -44,7 +40,7 @@
             // this.$emit("delete:movie")
 
             const xhr = new XMLHttpRequest();
-            const url = "http://localhost:8080/movies/" + id
+            const url = "http://localhost:8080/auditoriums/" + id
             alert(id)
             xhr.open("DELETE", url, false)
             xhr.setRequestHeader("Access-Control-Allow-Headers",
@@ -56,7 +52,7 @@
 
             console.log(xhr.responseText)
             // alert('Dane usunięte pomyślnie')
-            this.$emit('delete:movie');
+            this.$emit('delete:auditorium');
 
         },
         

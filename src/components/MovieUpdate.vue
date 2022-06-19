@@ -1,6 +1,7 @@
 <template>
 <body>
-	<h2>Dodaj film</h2>
+    <router-link v-if="$auth.isAuthenticated" :to="{ name: 'Admin Panel'}">Powrót do panelu administratora</router-link>
+	<h2>Edytuj film</h2>
     <div>
     <form @submit.prevent="handleSubmit">
 			<label>Nazwa filmu<br/></label>
@@ -46,7 +47,7 @@
 			<p v-if="success" class="success-message">
 				Dane poprawnie zapisano
 			</p>
-			<button>Dodaj film</button>
+			<button>Zapisz</button>
 		</form>
         </div>
 </body>
@@ -54,7 +55,7 @@
 
 <script>
 export default {
-		name: 'MovieForm',
+		name: 'MovieUpdate',
 		data() {
 			return {
 				movie: {
@@ -68,7 +69,20 @@ export default {
 				}
 			}
 		},
+        mounted() {
+            this.getMovie();
+        },
 		methods: {
+            async getMovie() {
+                try {
+                //const response = await fetch('https://jsonplaceholder.typicode.com/users%27)
+                const response = await fetch("http://localhost:8080/movies/" + this.$route.params.id)
+                const data = await response.json()
+                this.movie = data
+                } catch (error) {
+                    console.error(error)
+                    } 
+					},
 			handleSubmit() {
 				this.submitting = true
 				this.clearStatus()
@@ -78,28 +92,19 @@ export default {
 					return
 				}
 
-				const xhr = new XMLHttpRequest()
-				xhr.open("POST", "http://localhost:8080/movies", false)
-				xhr.setRequestHeader('Content-type', 'application/JSON')
-				xhr.send(JSON.stringify(this.movie))
-				console.log(JSON.stringify(this.movie))
-				this.$emit('add:movie')
-				console.log(xhr.status)
+				const xhr = new XMLHttpRequest();
+                xhr.open("PUT", "http://localhost:8080/movies/" + this.$route.params.id, false);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.setRequestHeader("Access-Control-Allow-Headers",
+                    "Origin, X-Requested-With, Content-Type, Accept");
+                xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+                xhr.setRequestHeader("Access-Control-Allow-Methods", "DELETE, POST, GET, OPTIONS");
+                xhr.send(JSON.stringify(this.movie));
 
-				
-				//clear form fields
-				this.movie = {
-					name: '',
-					duration: '',
-					description: '',
-					imageLink: '',
-				}
-
-				
-				this.error = false
-				this.success = true
-				this.submitting = false
+                this.success = true;
+                this.submitting = false;
 			},
+
 			clearStatus() {
 				this.success = false
 				this.error = false

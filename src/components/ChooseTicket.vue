@@ -1,6 +1,14 @@
 <template>
 <body>
-  <!-- Tu bedzie jeszcze logo -->
+
+  <div>Wybrany film: {{ movie.name }} </div>
+
+  <select name="assignments" @change="getAuditorium(assignment_id)" v-model="assignment_id">
+				<option v-for="assignment in assignments" :key="assignment.id" :value="assignment.id">
+					{{ assignment.startsAt }}
+				</option>
+			</select>
+
     <ul class="showcase">
       <li>
         <div class="seat"></div>
@@ -18,112 +26,110 @@
 
     <div class="screen">Ekran</div>
 
-    <!-- Tutaj trzeba bedzie jeszcze poprawic -->
 
     <div class="container">
 
-      <div class="row">1 
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">1</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">2</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">3</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">4</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">5</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">6</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">7</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">8</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">9</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">10</div>
-      </div>
-      <div class="row">2
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">1</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">2</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">3</div>
-        <div class="seat occupied">4</div>
-        <div class="seat occupied">5</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">6</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">7</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">8</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">9</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">10</div>
-      </div>
-      <div class="row">3
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">1</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">2</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">3</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">4</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">5</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">6</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">7</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">8</div>
-        <div class="seat occupied">9</div>
-        <div class="seat occupied">10</div>
-      </div>
-      <div class="row">4
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">1</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">2</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">3</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">4</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">5</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">6</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">7</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">8</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">9</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">10</div>
-      </div>
-      <div class="row">5
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">1</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">2</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">3</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">4</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">5</div>
-        <div class="seat occupied">6</div>
-        <div class="seat occupied">7</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">8</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">9</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">10</div>
-      </div>
-      <div class="row">6
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">1</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">2</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">3</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">4</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">5</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">6</div>
-        <div class="seat occupied">7</div>
-        <div class="seat occupied">8</div>
-        <div class="seat occupied">9</div>
-        <div class="seat" @click="e => e.target.classList.toggle('selected')">10</div>
-      </div>
+      <div v-for="r in seats/10" :key="r" class="row">{{ r }}
+      <div v-for="s in 10" :key="s">
+        <div class="seat occupied" v-if="occupied.includes(r * 10 + s - 10)">{{ s }}</div>
+        <div class="seat selected" v-else-if="selected.includes(r * 10 + s - 10)" @click="clickSeat(r * 10 + s - 10)">{{ s }}</div>
+        <div class="seat" v-else @click="e => e.target.classList.toggle('selected') && clickSeat(r * 10 + s - 10)">{{ s }}</div>
+
+        </div>
+        </div>
+
     </div>
+
+    <div>Wybrane miejsca: {{ selected.length }} <br/> (tymczasowo: {{assignment_id}}  {{assignment}})</div>
+
+    <button @click="buyTickets">Kup bilety</button>
 </body>
 </template>
 
 <script>
 
-/*const container = document.querySelector('.container');
-//const seats = document.querySelectorAll('.row .seat');
-
-container.addClickListener('click', s => {
-  if(s.target.classList.contains('seat') && !s.target.classList.contains('occupied')) {
-    s.target.classList.toogle('selected');
-  }
-});
-*/
-
-
 
 
 export default {
     name: 'choose-ticket',
-     props: {
-       //tymczasowo:
-        seats: [["", "", "", "", "", "", "", "", "", ""], ["", "", "", "occupied", "occupied", "", "", "", "", ""], ["", "", "", "", "", "", "", "", "occupied", "occupied"], ["", "", "", "", "", "", "", "", "", ""], ["", "", "", "", "", "occupied", "occupied", "", "", ""], ["", "", "", "", "", "", "occupied", "occupied", "occupied", ""]],
+    props: {
+      id: Number,
+
+    },
+    data() {
+      return {
+        assignment_id: '',
+        occupied: [],
+        selected: [],
+        seats: 0,
+        movie: '',
+        assignments: [],
+        assignment: '',
+        movie_id: '',
+      }  
     },
     
+     mounted() {
+      // this.getMovieId();
+      this.getMovie();
+      this.getAssignments();
+    },
+     
+    
     methods: {
-      click_seat: function(ev) {
-        ev.target.classList.toogle('selected');
-      }
+      // async getMovieId() {
+      //   this.movie_id = this.$route.params.id
+      // },
+      async getMovie() {
+        try {
+          //const response = await fetch('https://jsonplaceholder.typicode.com/users%27)
+          const response = await fetch("http://localhost:8080/movies/" + this.$route.params.id)
+          const data = await response.json()
+          this.movie = data
+          } catch (error) {
+            console.error(error)
+            } 
+      },
+       async getAssignments() {
+        try {
+          //const response = await fetch('https://jsonplaceholder.typicode.com/users%27)
+          const response = await fetch("http://localhost:8080/assignments/movieID=" + this.$route.params.id)
+          const data = await response.json()
+          this.assignments = data
+          } catch (error) {
+            console.error(error)
+            }    
+      },
+      async getAuditorium(assignment_id) {
+        try {
+          //const response = await fetch('https://jsonplaceholder.typicode.com/users%27)
+          const response = await fetch("http://localhost:8080/assignments/" + assignment_id)
+          const data = await response.json()
+          this.assignment = data
+          this.seats = data.auditorium.seats
+          
+          } catch (error) {
+            console.error(error)
+            } 
+      },
+      clickSeat(id) {
+        if(this.selected.includes(id)) {
+          this.selected = this.selected.filter(function(ele) {
+            return ele != id
+          })
+        }
+        else {
+          this.selected = [...this.selected, id]
+        }
+        
+      },
+
+      buyTickets() {
+        this.occupied = [...this.occupied, ...this.selected]
+        this.selected = []
+        
+      },
+
 
       
 
@@ -146,6 +152,10 @@ body {
     color: rgb(255, 255, 255);
     font-family: Helvetica;
     font-size: 24px;
+}
+
+.screen {
+  text-align: center;
 }
 
 
@@ -230,5 +240,8 @@ body {
     margin: auto;
     max-width: 680px; 
     display: flex;
+}
+select {
+  background-color: rgb(255, 255, 255);
 }
 </style>

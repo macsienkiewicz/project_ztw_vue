@@ -2,19 +2,16 @@
 
     
     <body>
-        <!-- Tu bedzie jeszcze logo i menu -->
-        <h2>Filmy</h2>
+        <h2>Assignments</h2>
 
 
-        <div v-for="movie in moviesSource" v-bind:key="movie.id">
-        <h5>{{ movie.name }}</h5>
-        <i>Czas trwania: {{ movie.duration }} min</i><br/>
-        {{ movie.description }}
-        <!-- <img alt="movie.name" src="movie.imageLink"> -->
+        <div v-for="assignment in assignmentsSource" v-bind:key="assignment.id">
+        Godzina: {{ assignment.startsAt }}<br/>
+        Start date: {{ assignment.startDate }}<br/>
+        End date: {{ assignment.endDate }}
         <br/><br/>
-        <router-link v-if="!$auth.isAuthenticated" :to="{ name: 'Choose Ticket', params: { id: movie.id }}">Kup Bilet</router-link>
-        <router-link v-if="$auth.isAuthenticated" :to="{ name: 'Movie Update', params: { id: movie.id }}">Edytuj film</router-link><br/>
-        <button v-if="$auth.isAuthenticated" @click="deleteMovie(movie.id)">Usuń</button>
+        <router-link v-if="$auth.isAuthenticated" :to="{ name: 'Assignment Update', params: { id: assignment.id }}">Edytuj</router-link><br/>
+        <button v-if="$auth.isAuthenticated" @click="deleteAssignment(assignment.id)">Usuń</button>
 
         </div>
     
@@ -25,9 +22,9 @@
 
 
  export default {
-     name: 'movies-table',
+     name: 'assignments-table',
      props: {
-        moviesSource: Array,
+        assignmentsSource: Array,
     },
 
     
@@ -35,7 +32,7 @@
     methods: {
        
         
-        deleteMovie(id) {
+        deleteAssignment(id) {
             // const xhr = new XMLHttpRequest()
             // const url = "http://localhost:8080/movies/" + id
             // xhr.open("DELETE", url, false)
@@ -44,7 +41,7 @@
             // this.$emit("delete:movie")
 
             const xhr = new XMLHttpRequest();
-            const url = "http://localhost:8080/movies/" + id
+            const url = "http://localhost:8080/assignments/" + id
             alert(id)
             xhr.open("DELETE", url, false)
             xhr.setRequestHeader("Access-Control-Allow-Headers",
@@ -56,7 +53,7 @@
 
             console.log(xhr.responseText)
             // alert('Dane usunięte pomyślnie')
-            this.$emit('delete:movie');
+            this.$emit('delete:assignment');
 
         },
         
