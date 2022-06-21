@@ -106,6 +106,9 @@ export default {
 			invalidTickets() {
 				return this.selected.length == 0 
 			},
+      invalidDate() {
+        return this.date === ''
+      }
     },
      
     
@@ -218,14 +221,12 @@ export default {
       },
 
       buyTickets() {
-        this.occupied = [...this.occupied, ...this.selected]
-        
-
         this.submitting = true
-				if (this.invalidTickets) {
+				if (this.invalidTickets || this.invalidDate) {
 					this.error = true
 					return
 				}
+        this.occupied = [...this.occupied, ...this.selected]
         for (var i = 0; i < this.selected.length; i++) {
           const xhr = new XMLHttpRequest()
           xhr.open("POST", "http://localhost:8080/booked-tickets", false)
