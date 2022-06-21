@@ -131,7 +131,13 @@ export default {
           //const response = await fetch('https://jsonplaceholder.typicode.com/users%27)
           const response = await fetch("http://localhost:8080/assignments/movieID=" + this.$route.params.id)
           const data = await response.json()
-          this.assignments = data
+          const today = new Date()
+          for(var i = 0; i < data.length; i++) {
+            const end_date = new Date(data[i].endDate)
+            if(today < end_date) {
+              this.assignments.push(data[i])
+            }
+          }
           } catch (error) {
             console.error(error)
             }    
@@ -147,7 +153,6 @@ export default {
           const response = await fetch("http://localhost:8080/assignments/" + assignment_id)
           const data = await response.json()
           this.assignment = data
-          this.seats = data.auditorium.seats
           this.getDates()
           
           } catch (error) {
@@ -203,6 +208,7 @@ export default {
           const response_seats = await fetch("http://localhost:8080/booked-tickets/assignmentID=" + this.assignment.id + "/movieDate=" + this.date)
           const data_seats = await response_seats.json()
           this.occupied =  [...this.occupied, ...data_seats]
+          this.seats = this.assignment.auditorium.seats
         } catch (error) {
             console.error(error)
             } 
