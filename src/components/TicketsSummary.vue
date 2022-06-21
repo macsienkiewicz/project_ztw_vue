@@ -58,7 +58,7 @@ export default {
           for(var i = 0; i < this.booked_ticket.length; i++) {
             this.selected.push(data[i].seatNumber)
           }
-          this.selected_seats = this.selected
+          this.selected_seats = this.selected.sort()
           } catch (error) {
             console.error(error)
             } 
