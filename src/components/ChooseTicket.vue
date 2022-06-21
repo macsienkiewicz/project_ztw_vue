@@ -1,12 +1,20 @@
 <template>
 <body>
 
-  <router-link :to="{ name: 'Home'}">Powrót do strony głównej</router-link>
-  <div>Wybrany film: {{ movie.name }} </div>
+    <router-link :to="{ name: 'Home'}">Powrót do strony głównej</router-link>
+    <div>Wybrany film: {{ movie.name }} </div>
 
-  <select name="assignments" @change="getAuditorium(assignment_id)" v-model="assignment_id">
-				<option v-for="assignment in assignments" :key="assignment.id" :value="assignment.id">
-					{{ assignment.startsAt }}
+    <div>Wybierz godzinę:</div>
+    <select name="assignments" @change="getAuditorium(assignment_id)" v-model="assignment_id">Wybierz godzinę: 
+          <option v-for="assignment in assignments" :key="assignment.id" :value="assignment.id">
+            {{ assignment.startsAt }}
+          </option>
+        </select><br/>
+
+    <div>Wybierz datę:</div>
+    <select name="hours" @change="getDate(d)" v-model="d">Wybierz datę: 
+				<option v-for="date in dates" :key="date" :value="date">
+					{{ date }}
 				</option>
 			</select>
 
@@ -70,6 +78,8 @@ export default {
         movie: '',
         assignments: [],
         assignment: '',
+        dates: [],
+        date: '',
         movie_id: '',
         booked_tickets: [],
         booked_ticket: {
@@ -80,6 +90,7 @@ export default {
           code: '',
           movieId: '',
           startsAt: '',
+          movieDate: '',
         },
       }  
     },
@@ -88,6 +99,7 @@ export default {
       // this.getMovieId();
       this.getMovie();
       this.getAssignments();
+
     },
 
     computed: {
@@ -122,19 +134,77 @@ export default {
             }    
       },
       async getAuditorium(assignment_id) {
+        this.assignment = ''
+        this.seats = ''
+        this.occupied = []
+        this.selected = []
+        this.dates = []
         try {
           //const response = await fetch('https://jsonplaceholder.typicode.com/users%27)
           const response = await fetch("http://localhost:8080/assignments/" + assignment_id)
           const data = await response.json()
           this.assignment = data
           this.seats = data.auditorium.seats
-          const response_seats = await fetch("http://localhost:8080/booked-tickets/assignmentID=" + assignment_id)
-          const data_seats = await response_seats.json()
-          this.occupied =  [...this.occupied, ...data_seats]
+          this.getDates()
+          
           } catch (error) {
             console.error(error)
             } 
       },
+      async getDates() {
+        const today = new Date()
+        const start_date = new Date(this.assignment.startDate)
+        const end_date = new Date(this.assignment.endDate)
+        // this.dates = this.getDatesInRange(start_date, end_date)
+        var time = this.assignment.startsAt.split(':')
+        var t = new Date(today.getTime())
+        var start_today = new Date(today.setHours(time[0], time[1], time[2]))
+        if (t > start_today) {
+          today.setDate(today.getDate() + 1)
+        }
+        if(end_date > today) {
+          this.dates = this.getDatesInRange(today, end_date)
+          if(start_date > today) {
+            this.dates = this.getDatesInRange(start_date, end_date)
+          }
+          else {
+            this.dates = this.getDatesInRange(today, end_date)
+            
+          }
+        }
+
+      },
+      getDatesInRange(startDate, endDate) {
+        var time = this.assignment.startsAt.split(':')
+        const date = new Date(startDate.setHours(time[0], time[1], time[2]))
+
+        
+
+        const dates = []
+
+        while (date < endDate) {
+          var d = new Date(date)
+          var date_string = d.getFullYear() + "-" + (d.getMonth()+1).toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false }) + "-" + d.getDate().toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false })
+          dates.push(date_string)
+          date.setDate(date.getDate() + 1)
+        }
+
+        return dates;
+      },
+
+      async getDate(d) {
+        this.date = d
+        this.occupied = []
+        this.selected = []
+        try {
+          const response_seats = await fetch("http://localhost:8080/booked-tickets/assignmentID=" + this.assignment.id + "/movieDate=" + this.date)
+          const data_seats = await response_seats.json()
+          this.occupied =  [...this.occupied, ...data_seats]
+        } catch (error) {
+            console.error(error)
+            } 
+      },
+      
       clickSeat(id) {
         if(this.selected.includes(id)) {
           this.selected = this.selected.filter(function(ele) {
@@ -160,8 +230,9 @@ export default {
           const xhr = new XMLHttpRequest()
           xhr.open("POST", "http://localhost:8080/booked-tickets", false)
           xhr.setRequestHeader('Content-type', 'application/JSON')
-          var code = this.assignment.startsAt + this.assignment.id + this.selected[0] 
+          var code = this.date + this.assignment.startsAt + this.assignment.id + this.selected[0] 
           this.booked_ticket.code = code 
+          this.booked_ticket.movieDate = this.date
           this.booked_ticket.seatNumber = this.selected[i]
           this.booked_ticket.movieId = this.movie.id
           this.booked_ticket.startsAt = this.assignment.startsAt
@@ -182,6 +253,7 @@ export default {
             code: '',
             movieId: '',
             startsAt: '',
+            movieDate: '',
           }
         }
 

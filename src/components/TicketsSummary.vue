@@ -8,6 +8,7 @@
     <div>Wybrane miejsca: {{ selected_seats }}</div><br/>
     <div>Kod: {{ $route.params.id }}</div><br/>
     <div>Sala: {{ assignment.auditorium.id }}</div><br/>
+    <div>Data: {{ movieDate }}</div><br/>
     <div>Godzina: {{ assignment.startsAt }}</div><br/><br/>
     <h5>Dziękujemy za zakup biletów!</h5>
 
@@ -53,6 +54,7 @@ export default {
           this.booked_ticket = data
           this.assignment = data[0].assignment
           this.movie = data[0].assignment.movie
+          this.movieDate = data[0].movieDate
           for(var i = 0; i < this.booked_ticket.length; i++) {
             this.selected.push(data[i].seatNumber)
           }
