@@ -5,6 +5,7 @@ import App from './App.vue'
 import Router from 'vue-router'
 
 import ChooseTicket from './components/ChooseTicket.vue'
+import TicketSummary from './components/TicketsSummary.vue'
 import Home from './components/HomePage.vue'
 import MovieForm from './components/MovieForm.vue'
 import MovieUpdate from './components/MovieUpdate.vue'
@@ -49,6 +50,11 @@ const router = new Router({
       name: 'Choose Ticket',
       component: ChooseTicket,
       params: castPropToNumber,
+    },
+    {
+      path: '/ticket-summary/:id',
+      name: 'Ticket Summary',
+      component: TicketSummary,
     },
     {
       path: '/add-movie',
