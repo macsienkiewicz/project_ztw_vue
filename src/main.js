@@ -4,14 +4,13 @@ import Vue from 'vue'
 import App from './App.vue'
 import Router from 'vue-router'
 
-import ChooseTicket from './components/ChooseTicket.vue'
-import TicketSummary from './components/TicketsSummary.vue'
-import Home from './components/HomePage.vue'
-import MovieForm from './components/MovieForm.vue'
+import ChooseTicket from './pages/ChooseTicket.vue'
+import TicketSummary from './pages/TicketsSummary.vue'
+import Home from './pages/HomePage.vue'
 import MovieUpdate from './components/MovieUpdate.vue'
 import AuditoriumUpdate from './components/AuditoriumUpdate.vue'
 import AssignmentUpdate from './components/AssignmentUpdate.vue'
-import AdminPanel from './components/AdminPanel.vue'
+import AdminPanel from './pages/AdminPanel.vue'
 
 
 // import { domain, clientId, audience } from '../auth_config.json'
@@ -55,11 +54,6 @@ const router = new Router({
       path: '/ticket-summary/:id',
       name: 'Ticket Summary',
       component: TicketSummary,
-    },
-    {
-      path: '/add-movie',
-      name: 'Add Movie',
-      component: MovieForm,
     },
     {
       path: '/update-movie/:id',
