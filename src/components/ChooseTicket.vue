@@ -1,7 +1,7 @@
 <template>
 <body>
 
-    <router-link :to="{ name: 'Home'}">Powrót do strony głównej</router-link>
+    <router-link tag="button" :to="{ name: 'Home'}">Powrót do strony głównej</router-link>
     <div>Wybrany film: {{ movie.name }} </div>
 
     <div>Wybierz godzinę:</div>

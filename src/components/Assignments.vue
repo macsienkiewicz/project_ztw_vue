@@ -10,7 +10,7 @@
         Start date: {{ assignment.startDate }}<br/>
         End date: {{ assignment.endDate }}
         <br/><br/>
-        <router-link v-if="$auth.isAuthenticated" :to="{ name: 'Update Assignment', params: { id: assignment.id }}">Edytuj</router-link><br/>
+        <router-link tag="button" v-if="$auth.isAuthenticated" :to="{ name: 'Update Assignment', params: { id: assignment.id }}">Edytuj</router-link><br/>
         <button v-if="$auth.isAuthenticated" @click="deleteAssignment(assignment.id)">Usuń</button>
 
         </div>

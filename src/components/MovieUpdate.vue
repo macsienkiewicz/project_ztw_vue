@@ -1,6 +1,6 @@
 <template>
 <body>
-    <router-link v-if="$auth.isAuthenticated" :to="{ name: 'Admin Panel'}">Powrót do panelu administratora</router-link>
+    <router-link tag="button" v-if="$auth.isAuthenticated" :to="{ name: 'Admin Panel'}">Powrót do panelu administratora</router-link>
 	<h2>Edytuj film</h2>
     <div>
     <form @submit.prevent="handleSubmit">
