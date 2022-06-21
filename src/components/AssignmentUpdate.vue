@@ -1,5 +1,6 @@
 <template>
 <body>
+	<router-link v-if="$auth.isAuthenticated" :to="{ name: 'Admin Panel'}">Powrót do panelu administratora</router-link>
 	<h2>Edytuj assignment</h2>
     <div>
     <form @submit.prevent="handleSubmit">
@@ -71,8 +72,8 @@ export default {
 					startsAt: '',
 					startDate: '',
 					endDate: '',
-					movie: '',
-                    auditorium: '',
+					movieId: '',
+                    auditoriumId: '',
 				},
                 movies: [],
                 auditoriums: [],

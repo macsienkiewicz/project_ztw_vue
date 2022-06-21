@@ -1,5 +1,6 @@
 <template>
 <body>
+	<router-link v-if="$auth.isAuthenticated" :to="{ name: 'Admin Panel'}">Powrót do panelu administratora</router-link>
 	<h2>Edytuj salę</h2>
     <div>
     <form @submit.prevent="handleSubmit">

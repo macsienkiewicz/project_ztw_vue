@@ -9,7 +9,7 @@
         Nr sali: {{ auditorium.id }}<br/>
         Liczba miejsc: {{ auditorium.seats }}
         <br/><br/>
-        <router-link v-if="$auth.isAuthenticated" :to="{ name: 'Auditorium Update', params: { id: auditorium.id }}">Edytuj</router-link><br/>
+        <router-link v-if="$auth.isAuthenticated" :to="{ name: 'Update Auditorium', params: { id: auditorium.id }}">Edytuj</router-link><br/>
         <button v-if="$auth.isAuthenticated" @click="deleteAuditorium(auditorium.id)">Usuń</button>
 
         </div>

@@ -10,10 +10,10 @@
         <h5>{{ movie.name }}</h5>
         <i>Czas trwania: {{ movie.duration }} min</i><br/>
         {{ movie.description }}
-        <!-- <img alt="movie.name" src="movie.imageLink"> -->
+        <img alt="movie img" v-bind:src="movie.imageLink" class="photo">
         <br/><br/>
         <router-link v-if="!$auth.isAuthenticated" :to="{ name: 'Choose Ticket', params: { id: movie.id }}">Kup Bilet</router-link>
-        <router-link v-if="$auth.isAuthenticated" :to="{ name: 'Movie Update', params: { id: movie.id }}">Edytuj film</router-link><br/>
+        <router-link v-if="$auth.isAuthenticated" :to="{ name: 'Update Movie', params: { id: movie.id }}">Edytuj film</router-link><br/>
         <button v-if="$auth.isAuthenticated" @click="deleteMovie(movie.id)">Usuń</button>
 
         </div>
@@ -83,5 +83,11 @@ body {
 div {
     text-align: left;
     font-size: 18px;
+}
+.photo {
+    height: 700px;
+    width: 500px;
+    margin-left: auto;
+    margin-right: auto;
 }
 </style>

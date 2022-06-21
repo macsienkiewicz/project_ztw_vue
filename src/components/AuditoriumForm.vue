@@ -43,7 +43,7 @@ export default {
 				this.submitting = true
 				this.clearStatus()
 				//check form fields
-				if (this.invalidText || this.invalidDuration) {
+				if (this.invalidNumber) {
 					this.error = true
 					return
 				}

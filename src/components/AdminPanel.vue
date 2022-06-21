@@ -55,7 +55,7 @@ export default {
 
     mounted() {
       this.getMovies()
-      this.gestAssignments()
+      this.getAssignments()
       this.getAuditoriums()
     },
 
@@ -71,7 +71,7 @@ export default {
           }      
     },
 
-    async gestAssignments() {
+    async getAssignments() {
         try {
         //const response = await fetch('https://jsonplaceholder.typicode.com/users%27)
         const response = await fetch("http://localhost:8080/assignments")

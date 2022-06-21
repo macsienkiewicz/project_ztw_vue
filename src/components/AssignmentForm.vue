@@ -32,13 +32,13 @@
 				@keypress="clearStatus"
 			/><br/>
             <label>Movie</label>
-			<select name="movies" v-model="assignment.movie">
+			<select name="movies" v-model="assignment.movieId">
 				<option v-for="movie in movies" :key="movie.id" :value="movie.id">
 					{{ movie.name }}
 				</option>
 			</select>
             <label>Auditorium</label>
-			<select name="auditoriums" v-model="assignment.auditorium">
+			<select name="auditoriums" v-model="assignment.auditoriumId">
 				<option v-for="auditorium in auditoriums" :key="auditorium.id" :value="auditorium.id">
 					{{ auditorium.id }}
 				</option>
@@ -71,8 +71,8 @@ export default {
 					startsAt: '',
 					startDate: '',
 					endDate: '',
-					movie: '',
-                    auditorium: '',
+					movieId: '',
+                    auditoriumId: '',
 				},
                 movies: [],
                 auditoriums: [],
@@ -127,8 +127,8 @@ export default {
 					startsAt: '',
 					startDate: '',
 					endDate: '',
-					movie: '',
-                    auditorium: '',
+					movieId: '',
+                    auditoriumId: '',
 				}
 
 				

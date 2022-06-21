@@ -1,7 +1,6 @@
 <template>
 <body>
   <Movies @delete:movie="getMovies" :moviesSource="movies"/>
-  <MovieForm v-if="$auth.isAuthenticated"  @add:movie="getMovies"/>
   <AuthenticationButton v-if="$auth.isAuthenticated" />
   
 
@@ -13,7 +12,6 @@
 
 <script>
 import Movies from './Movies.vue'
-import MovieForm from './MovieForm.vue'
 import AuthenticationButton from './AuthenticationButton.vue'
 
 
@@ -21,7 +19,6 @@ export default {
     name: 'HomePage',
     components: {
       Movies,
-      MovieForm,
       AuthenticationButton,
     },
 

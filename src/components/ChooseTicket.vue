@@ -1,6 +1,7 @@
 <template>
 <body>
 
+  <router-link :to="{ name: 'Home'}">Powrót do strony głównej</router-link>
   <div>Wybrany film: {{ movie.name }} </div>
 
   <select name="assignments" @change="getAuditorium(assignment_id)" v-model="assignment_id">
@@ -29,20 +30,24 @@
 
     <div class="container">
 
-      <div v-for="r in seats/10" :key="r" class="row">{{ r }}
+      <div v-for="r in seats/10" :key="r" class="row">
       <div v-for="s in 10" :key="s">
-        <div class="seat occupied" v-if="occupied.includes(r * 10 + s - 10)">{{ s }}</div>
-        <div class="seat selected" v-else-if="selected.includes(r * 10 + s - 10)" @click="clickSeat(r * 10 + s - 10)">{{ s }}</div>
-        <div class="seat" v-else @click="e => e.target.classList.toggle('selected') && clickSeat(r * 10 + s - 10)">{{ s }}</div>
+        <div class="seat occupied" v-if="occupied.includes(r * 10 + s - 10)">{{ r * 10 + s - 10 }}</div>
+        <div class="seat selected" v-else-if="selected.includes(r * 10 + s - 10)" @click="clickSeat(r * 10 + s - 10)">{{ r * 10 + s - 10 }}</div>
+        <div class="seat" v-else @click="e => e.target.classList.toggle('selected') && clickSeat(r * 10 + s - 10)">{{ r * 10 + s - 10 }}</div>
 
         </div>
         </div>
 
     </div>
 
-    <div>Wybrane miejsca: {{ selected.length }} <br/> (tymczasowo: {{assignment_id}}  {{assignment}})</div>
+    <div>Wybrane miejsca: {{ selected.length }}</div>
 
+    <p v-if="error && submitting" class="error-message">
+				Nie wybrano miejsc!
+			</p>
     <button @click="buyTickets">Kup bilety</button>
+    
 </body>
 </template>
 
@@ -61,11 +66,21 @@ export default {
         assignment_id: '',
         occupied: [],
         selected: [],
-        seats: 0,
+        seats: '',
         movie: '',
         assignments: [],
         assignment: '',
         movie_id: '',
+        booked_tickets: [],
+        booked_ticket: {
+          submitting: false,
+					error: false,
+					success: false,
+          seatNumber: '',
+          code: '',
+          movieId: '',
+          startsAt: '',
+        },
       }  
     },
     
@@ -73,6 +88,12 @@ export default {
       // this.getMovieId();
       this.getMovie();
       this.getAssignments();
+    },
+
+    computed: {
+			invalidTickets() {
+				return this.selected.length == 0 
+			},
     },
      
     
@@ -107,7 +128,9 @@ export default {
           const data = await response.json()
           this.assignment = data
           this.seats = data.auditorium.seats
-          
+          const response_seats = await fetch("http://localhost:8080/booked-tickets/assignmentID=" + assignment_id)
+          const data_seats = await response_seats.json()
+          this.occupied =  [...this.occupied, ...data_seats]
           } catch (error) {
             console.error(error)
             } 
@@ -126,9 +149,53 @@ export default {
 
       buyTickets() {
         this.occupied = [...this.occupied, ...this.selected]
+        
+
+        this.submitting = true
+				if (this.invalidTickets) {
+					this.error = true
+					return
+				}
+        for (var i = 0; i < this.selected.length; i++) {
+          const xhr = new XMLHttpRequest()
+          xhr.open("POST", "http://localhost:8080/booked-tickets", false)
+          xhr.setRequestHeader('Content-type', 'application/JSON')
+          var code = this.assignment.startsAt + this.assignment.id + this.selected[0] 
+          this.booked_ticket.code = code 
+          this.booked_ticket.seatNumber = this.selected[i]
+          this.booked_ticket.movieId = this.movie.id
+          this.booked_ticket.startsAt = this.assignment.startsAt
+          xhr.send(JSON.stringify(this.booked_ticket))
+          console.log(JSON.stringify(this.booked_ticket))
+          this.$emit('add:bookedticket')
+          console.log(xhr.status)
+
+          this.error = false
+          this.success = true
+          this.submitting = false
+
+          this.booked_ticket = {
+            submitting: false,
+            error: false,
+            success: false,
+            seatNumber: '',
+            code: '',
+            movieId: '',
+            startsAt: '',
+          }
+        }
+
+				
+
         this.selected = []
+        var new_location = "http://localhost:8086/ticket-summary/" + code
+        window.location.href = new_location
+
+
         
       },
+
+      
 
 
       
@@ -244,4 +311,8 @@ body {
 select {
   background-color: rgb(255, 255, 255);
 }
+
+.error-message {
+		color: #d33c40;
+	}
 </style>
