@@ -235,7 +235,7 @@ export default {
         this.occupied = [...this.occupied, ...this.selected]
         for (var i = 0; i < this.selected.length; i++) {
           const xhr = new XMLHttpRequest()
-          xhr.open("POST", "http://localhost:8080/booked-tickets", false)
+          xhr.open("POST", "http://localhost/booked-tickets", false)
           xhr.setRequestHeader('Content-type', 'application/JSON')
           var code = this.date + this.assignment.startsAt + this.assignment.id + this.selected[0] 
           this.booked_ticket.code = code 
