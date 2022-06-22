@@ -7,10 +7,10 @@
 
 
         <div v-for="movie in moviesSource" v-bind:key="movie.id">
+        <div class="cen"><img alt="movie img" v-bind:src="movie.imageLink" class="photo"></div>
         <h5>{{ movie.name }}</h5>
         <i>Czas trwania: {{ movie.duration }} min</i><br/>
         {{ movie.description }}
-        <img alt="movie img" v-bind:src="movie.imageLink" class="photo">
         <br/><br/>
         <router-link tag="button" v-if="!$auth.isAuthenticated" :to="{ name: 'Choose Ticket', params: { id: movie.id }}">Kup Bilet</router-link>
         <router-link tag="button" v-if="$auth.isAuthenticated" :to="{ name: 'Update Movie', params: { id: movie.id }}">Edytuj film</router-link><br/>
@@ -90,4 +90,6 @@ div {
     margin-left: auto;
     margin-right: auto;
 }
+.cen {
+    text-allign: center;
 </style>
